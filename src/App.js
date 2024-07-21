@@ -20,6 +20,7 @@ const App = () => {
 
   // another state variable to signify the result of the game
   const [gameWon, setGameWon] = useState(false)
+  const [showModal, setShowModal] = useState(false)
 
   // state variable that identifies the actual content of the box
   const [labels, setLabels] = useState([])
@@ -53,7 +54,6 @@ const App = () => {
   // display a single fruit
   const displayFruit = (idx) => {
     const drawnFruitType = content[idx]
-    console.log("In function displayFruit, ", drawnFruitType)
     const imgObj = ( (drawnFruitType === 'oranges') 
                       ? OrangeImage 
                       : (drawnFruitType === 'apples') 
@@ -96,13 +96,21 @@ const App = () => {
     )
   }
 
-  const openAllBoxes = () => {
-    console.log("Open boxes here!")
-  }
-
-  const loadModal = () => {
-    console.log("Code for loading modal here!")
-  }
+  // Modal component
+  const Modal = ({ isOpen, onClose, children }) => {
+    if (!isOpen) return null;
+  
+    return (
+      <div className="modal-overlay">
+        <div className="modal-content">
+          <button className="modal-close" onClick={onClose}>
+            &times;
+          </button>
+          {children}
+        </div>
+      </div>
+    );
+  };
 
   // Helper functions
   const swap = (arr, i, j) => {
@@ -136,7 +144,6 @@ const App = () => {
 
   // User actions handlers
   const revealBox = (id)  => {
-    console.log("Box clicked: ", {id, labels, content})
     setBoxOpened({status: true, idx: id})
   }
 
@@ -167,14 +174,17 @@ const App = () => {
     const appleIdx = content.indexOf('apples')
     const orangeIdx = content.indexOf('oranges')
     const bothIdx = content.indexOf('both')
-
-    console.log({appleIdx, orangeIdx, bothIdx})
-    console.log(userChoices.apples)
     
     if ((userChoices.apples === appleIdx) && (userChoices.oranges === orangeIdx) && (userChoices.both === bothIdx)) {
       setGameWon(true)
+    } else {
+      setGameWon(false)
     }
   }
+
+  const handleRefresh = () => {
+    window.location.reload();
+  };
 
   // useEffect calls on the rest
   useEffect(() => {
@@ -194,11 +204,9 @@ const App = () => {
   }, [userChoices])
 
   useEffect(() => {
-    if (gameWon) {
-      openAllBoxes()
-      loadModal()
-    }
-  }, [gameWon])
+    setShowModal(true)
+    
+  }, [activateSubmitBtn])
 
   return (
     <div className="container">
@@ -206,6 +214,10 @@ const App = () => {
         { renderBoxes() }
         <button id="checkGuesses" disabled={!activateSubmitBtn} onClick={() => checkResults()}>Check Guesses</button>
         <p id="message">{message}</p>
+        <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+          <h2>{gameWon ? 'Congratulations!!!' : 'Sorry!!!'}</h2>
+          <p>{gameWon ? 'You have successfully solved the puzzle!' : 'The puzzle was not correctly solved. Try Again!'}</p>
+        </Modal>
     </div>
   );
 }
