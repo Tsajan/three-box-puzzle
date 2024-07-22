@@ -19,7 +19,7 @@ const App = () => {
   const [userChoices, setUserChoices] = useState({ 'apples': -1, 'oranges': -1, 'both': -1 }) // initial random value
 
   // another state variable to signify the result of the game
-  const [gameWon, setGameWon] = useState(false)
+  const [gameWon, setGameWon] = useState(-1)
   const [showModal, setShowModal] = useState(false)
 
   // state variable that identifies the actual content of the box
@@ -68,6 +68,35 @@ const App = () => {
       </div>
     )
   }
+
+  // display fruits from the box; used when solving
+  const displayFruitsInBox = (idx) => {
+    const fruitTypes = content[idx]
+
+    if(fruitTypes === 'apples') {
+      return (
+        <div className="fruits_bunch" key="apple_bunch">
+          {"Apple Bunch Here"}
+        </div>
+      )
+    }
+    
+    else if(fruitTypes === 'oranges') {
+      return (
+        <div className="fruits_bunch" key="orange_bunch">
+          {"Orange Bunch here!"}
+        </div>
+      )
+    }
+
+    else if(fruitTypes === 'both') {
+      return (
+        <div className="fruits_bunch" key="both_bunch">
+          {"Both Bunch here!"}
+        </div>
+      )
+    }
+  }
   
   // render single box
   const renderSingleBox = (idx) => {
@@ -80,20 +109,31 @@ const App = () => {
         }
         <div className="labelandoptions">
           <p className="labeltext">{labelMap[labels[idx]]}</p>
-          { boxOpened.status ? 
-              <select className="options" id={optionId} value={userChoices[idx]} onChange={(e) => handleOptionChange(e, idx)}>
-                <option value="select">Select</option>
-                <option value="apples">Apples</option>
-                <option value="oranges">Oranges</option>
-                <option value="both">Apples & Oranges</option>
-              </select> 
-            :
-              <button className="revealButton" id={boxId} onClick={() => revealBox(idx)}>{"Open"}</button>
-          }
-          
+          { (gameWon === -1) 
+            ? ((boxOpened.status) 
+              ? 
+                <select className="options" id={optionId} value={userChoices[idx]} onChange={(e) => handleOptionChange(e, idx)}>
+                  <option value="select">Select</option>
+                  <option value="apples">Apples</option>
+                  <option value="oranges">Oranges</option>
+                  <option value="both">Apples & Oranges</option>
+                </select> 
+              :
+                <button className="revealButton" id={boxId} onClick={() => revealBox(idx)}>{"Open"}</button>)
+            : <></>
+          }    
         </div>
       </div>
     )
+  }
+
+  // open all boxes after result submission
+  const openAllBoxes = () => {
+    return (
+      <>
+
+      </>
+    ) 
   }
 
   // Modal component
@@ -175,16 +215,15 @@ const App = () => {
     const orangeIdx = content.indexOf('oranges')
     const bothIdx = content.indexOf('both')
     
+    console.log("In function checkResults", {userChoices, appleIdx, orangeIdx, bothIdx})
     if ((userChoices.apples === appleIdx) && (userChoices.oranges === orangeIdx) && (userChoices.both === bothIdx)) {
-      setGameWon(true)
+      console.log("Puzzle Solved!")
+      setGameWon(1)
     } else {
-      setGameWon(false)
+      setGameWon(0)
+      console.log("Puzzle not solved")
     }
   }
-
-  const handleRefresh = () => {
-    window.location.reload();
-  };
 
   // useEffect calls on the rest
   useEffect(() => {
@@ -198,15 +237,20 @@ const App = () => {
   }, [labels])
 
   useEffect(() => {
+    console.log({labels, content})
     if ((userChoices.apples !== -1) && (userChoices.oranges !== -1) && (userChoices.both !== -1)) {
       setActivateBtn(true)
     }
   }, [userChoices])
 
   useEffect(() => {
-    setShowModal(true)
-    
-  }, [activateSubmitBtn])
+    if(gameWon === 1) {
+      setShowModal(true)
+    }
+    else if(gameWon === 0) {
+      setShowModal(true)
+    }
+  }, [gameWon])
 
   return (
     <div className="container">
@@ -215,8 +259,8 @@ const App = () => {
         <button id="checkGuesses" disabled={!activateSubmitBtn} onClick={() => checkResults()}>Check Guesses</button>
         <p id="message">{message}</p>
         <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-          <h2>{gameWon ? 'Congratulations!!!' : 'Sorry!!!'}</h2>
-          <p>{gameWon ? 'You have successfully solved the puzzle!' : 'The puzzle was not correctly solved. Try Again!'}</p>
+          <h2>{(gameWon === 1) ? 'Congratulations!!!' : 'Sorry!!!'}</h2>
+          <p>{(gameWon === 1) ? 'You have successfully solved the puzzle!' : 'The puzzle was not correctly solved. Try Again!'}</p>
         </Modal>
     </div>
   );
