@@ -31,8 +31,12 @@ const App = () => {
   const renderTitle = () => {
     return (
       <>
-        <h1>Three Box Puzzle Game</h1>
-        <p className="description">Click on a box to reveal its contents, then guess the contents of the other boxes.</p>
+        <h1>{`Three Box Puzzle Game`}</h1>
+        <p>{`A simple UI for user to interact with the three box puzzle. There are three boxes: one with only apples, one with only oranges, and one with boxes. 
+        The boxes are labeled with "Apples", "Oranges" and "Apples & Oranges". Each box is labeled incorrectly. 
+        You are allowed to pick one fruit from a single box without seeing inside. 
+        How can you correctly label all the boxes?`}</p>
+        <p className="description">{`Click on a box to reveal its contents, then guess the contents of the other boxes.`}</p>
       </>
     )
   }

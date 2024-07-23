@@ -1,3 +1,7 @@
+## Three Box Puzzle
+
+A simple UI for user to interact with the three box puzzle. There are three boxes: one with only apples, one with only oranges, and one with boxes. The boxes are labeled with "Apples", "Oranges" and "Apples & Oranges". Each box is labeled incorrectly. You are allowed to pick one fruit from a single box without seeing inside. How can you correctly label all the boxes?
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
