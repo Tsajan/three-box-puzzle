@@ -14,9 +14,10 @@
   padding: 0px;
 
   .box {
-      width: 200px;
-      height: 200px;
+      width: 250px;
+      height: 250px;
       display: flex;
+      gap: 20px;
       flex-direction: column;
       justify-content: center;
       align-items: center;
@@ -24,6 +25,36 @@
       box-shadow: 10px 5px 5px black;
       background: rgb(34,193,195);
       background: linear-gradient(188deg, rgba(34,193,195,1) 1%, rgba(253,198,45,0.891281512605042) 43%);
+      
+      .fruits_bunch {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-top: -12px;
+        width: 105px;
+        height: 105px;
+
+        .fruit_firstrow, .fruit_secondrow {
+          display: flex;
+          position: relative;
+          align-items: center;
+          justify-content: center;
+          gap: 3px;
+
+          .thumbnail {
+            display: flex;
+            position: relative;
+            width: 50px;
+            height: 50px;
+            justify-content: center;
+            align-items: center;
+            max-width: 100%;
+            max-height: 100%;
+          }
+        }
+      }
 
       .fruits {
           display: flex;
@@ -53,7 +84,7 @@
 
           .options {
               display: flex;
-              border: 1px solid red;
+              height: 25px;
           }
       }
   }
@@ -102,4 +133,21 @@ button {
   background: none;
   font-size: 20px;
   cursor: pointer;
+}
+
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fruits_bunch {
+  opacity: 0;
+  animation: fadeInUp 0.5s ease-out forwards;
 }

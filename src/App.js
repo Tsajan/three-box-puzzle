@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import './App.css';
 import AppleImage from './img/apple.png'
 import OrangeImage from './img/orange.png'
+import { Button } from "react-bootstrap";
 
 let message = "All About Love"
 
@@ -76,7 +77,14 @@ const App = () => {
     if(fruitTypes === 'apples') {
       return (
         <div className="fruits_bunch" key="apple_bunch">
-          {"Apple Bunch Here"}
+          <div className="fruit_firstrow">
+            <img className="thumbnail" src={AppleImage} />
+            <img className="thumbnail" src={AppleImage} />
+          </div>
+          <div className="fruit_secondrow">
+            <img className="thumbnail" src={AppleImage} />
+            <img className="thumbnail" src={AppleImage} />
+          </div>
         </div>
       )
     }
@@ -84,7 +92,14 @@ const App = () => {
     else if(fruitTypes === 'oranges') {
       return (
         <div className="fruits_bunch" key="orange_bunch">
-          {"Orange Bunch here!"}
+          <div className="fruit_firstrow">
+            <img className="thumbnail" src={OrangeImage} />
+            <img className="thumbnail" src={OrangeImage} />
+          </div>
+          <div className="fruit_secondrow">
+            <img className="thumbnail" src={OrangeImage} />
+            <img className="thumbnail" src={OrangeImage} />
+          </div>
         </div>
       )
     }
@@ -92,7 +107,14 @@ const App = () => {
     else if(fruitTypes === 'both') {
       return (
         <div className="fruits_bunch" key="both_bunch">
-          {"Both Bunch here!"}
+          <div className="fruit_firstrow">
+            <img className="thumbnail" src={AppleImage} />
+            <img className="thumbnail" src={OrangeImage} />
+          </div>
+          <div className="fruit_secondrow">
+            <img className="thumbnail" src={OrangeImage} />
+            <img className="thumbnail" src={AppleImage} />
+          </div>
         </div>
       )
     }
@@ -104,9 +126,8 @@ const App = () => {
     const optionId = "option" + idx
     return (
       <div className="box" key={boxId} id={boxId}>
-        { (boxOpened.idx === idx) ? displayFruit(idx) : <></>
-          
-        }
+        { (boxOpened.idx === idx) && (gameWon === -1) ? displayFruit(idx) : <></> }
+        { (gameWon !== -1) ? displayFruitsInBox(idx) : <></>}
         <div className="labelandoptions">
           <p className="labeltext">{labelMap[labels[idx]]}</p>
           { (gameWon === -1) 
@@ -125,15 +146,6 @@ const App = () => {
         </div>
       </div>
     )
-  }
-
-  // open all boxes after result submission
-  const openAllBoxes = () => {
-    return (
-      <>
-
-      </>
-    ) 
   }
 
   // Modal component
@@ -244,19 +256,22 @@ const App = () => {
   }, [userChoices])
 
   useEffect(() => {
-    if(gameWon === 1) {
-      setShowModal(true)
-    }
-    else if(gameWon === 0) {
-      setShowModal(true)
-    }
+    setTimeout(() => { 
+      if(gameWon === 1) {
+        setShowModal(true)
+      }
+      else if(gameWon === 0) {
+        setShowModal(true)
+      }
+    }, 1200)
   }, [gameWon])
 
   return (
     <div className="container">
         { renderTitle() }
         { renderBoxes() }
-        <button id="checkGuesses" disabled={!activateSubmitBtn} onClick={() => checkResults()}>Check Guesses</button>
+        <Button id="checkGuesses" variant="primary" disabled={!activateSubmitBtn} onClick={() => checkResults()}>{'Submit'}</Button> &nbsp;
+        <Button variant="primary" onClick={() => window.location.reload()}>Reset</Button>{' '}
         <p id="message">{message}</p>
         <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
           <h2>{(gameWon === 1) ? 'Congratulations!!!' : 'Sorry!!!'}</h2>
